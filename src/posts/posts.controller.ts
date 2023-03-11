@@ -8,11 +8,14 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
+import { CreatePostDto } from './dto/create-post.dto';
+import { GetPostsDto } from './dto/get-posts.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Controller('posts')
 export class PostsController {
   @Get()
-  getAllPosts(@Query() query: any) {
+  getAllPosts(@Query() getPostsDto: GetPostsDto) {
     return 'This action returns all posts';
   }
 
@@ -22,12 +25,12 @@ export class PostsController {
   }
 
   @Post()
-  createPost(@Body() post: any) {
+  createPost(@Body() createPostDto: CreatePostDto) {
     return 'This action creates a post';
   }
 
   @Patch(':id')
-  updatePost(@Param('id') id: string, @Body() post: any) {
+  updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return 'This action updates a post';
   }
 
