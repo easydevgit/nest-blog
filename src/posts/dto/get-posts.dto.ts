@@ -4,9 +4,9 @@ import { PostStatus } from '../post-status.enum';
 export class GetPostsDto {
   @IsString()
   @IsOptional()
-  title?: string;
+  readonly title?: string;
 
   @IsEnum(PostStatus)
   @IsOptional()
-  status?: string;
+  readonly status?: string;
 }
