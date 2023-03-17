@@ -1,21 +1,15 @@
-import {
-  Body,
-  Delete,
-  Get,
-  Injectable,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { Body, Injectable, Param, Query } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { GetPostsDto } from './dto/get-posts.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PostRepository } from './post.repository';
 
 @Injectable()
 export class PostsService {
+  constructor(private readonly postRepository: PostRepository) {}
+
   getAllPosts(@Query() getPostsDto: GetPostsDto) {
-    return 'This action returns all posts';
+    return this.postRepository.find();
   }
 
   getPostById(@Param('id') id: string) {
