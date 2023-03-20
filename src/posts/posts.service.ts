@@ -1,7 +1,14 @@
-import { Body, Injectable, Param, Query } from '@nestjs/common';
+import {
+  Body,
+  Injectable,
+  NotFoundException,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { GetPostsDto } from './dto/get-posts.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Post } from './post.entity';
 import { PostRepository } from './post.repository';
 
 @Injectable()
@@ -12,19 +19,42 @@ export class PostsService {
     return this.postRepository.find();
   }
 
-  getPostById(@Param('id') id: string) {
-    return `This action returns a post by id ${id}`;
+  async getPostById(@Param('id') id: string): Promise<Post[]> {
+    const post = await this.postRepository.findBy({
+      id,
+    });
+
+    if (!post.length) {
+      throw new NotFoundException('Post not found');
+    }
+
+    return post;
   }
 
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return 'This action creates a post';
+  createPost(@Body() createPostDto: CreatePostDto): Promise<Post> {
+    const newPost = this.postRepository.create(createPostDto);
+    return this.postRepository.save(newPost);
   }
 
-  updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return 'This action updates a post';
+  async updatePost(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ): Promise<Post> {
+    const oldPost = await this.getPostById(id);
+
+    if (!oldPost.length) {
+      throw new NotFoundException('Post not found');
+    }
+
+    const editedPost = { ...oldPost[0], ...updatePostDto };
+    return await this.postRepository.save(editedPost);
   }
 
-  deletePost(@Param('id') id: string) {
-    return 'This action deletes a post';
+  async deletePost(@Param('id') id: string): Promise<void> {
+    const result = await this.postRepository.delete(id);
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Post ${id} not exists`);
+    }
   }
 }
