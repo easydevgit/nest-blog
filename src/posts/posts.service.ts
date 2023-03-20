@@ -15,8 +15,8 @@ import { PostRepository } from './post.repository';
 export class PostsService {
   constructor(private readonly postRepository: PostRepository) {}
 
-  getAllPosts(@Query() getPostsDto: GetPostsDto) {
-    return this.postRepository.find();
+  getAllPosts(@Query() getPostsDto: GetPostsDto): Promise<Post[]> {
+    return this.postRepository.getPosts(getPostsDto);
   }
 
   async getPostById(@Param('id') id: string): Promise<Post[]> {
