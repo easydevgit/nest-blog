@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { typeOrmAsyncConfig } from './config/typeorm.config';
 import { PostsModule } from './posts/posts.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { PostsModule } from './posts/posts.module';
     }),
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     PostsModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
